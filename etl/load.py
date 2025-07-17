@@ -1,7 +1,7 @@
 # Este módulo contendrá funciones para cargar los datos transformados a la base de datos
 import pandas as pd
 
-def load_dataframe_to_sql(df: pd.DataFrame, table_name: str, engine, if_exists: str = 'replace'):
+def load_dataframe_to_sql(df: pd.DataFrame, table_name: str, engine, if_exists: str = 'append'):
     """
     Carga un DataFrame a una tabla SQL Server usando SQLAlchemy.
     Args:
@@ -10,4 +10,4 @@ def load_dataframe_to_sql(df: pd.DataFrame, table_name: str, engine, if_exists: 
         engine: SQLAlchemy engine de la base de datos destino.
         if_exists: 'append' para agregar, 'replace' para reemplazar la tabla.
     """
-    df.to_sql(table_name, engine, if_exists=if_exists, index=False)
+    df.to_sql(table_name, engine, schema='DIM', if_exists=if_exists, index=False)
