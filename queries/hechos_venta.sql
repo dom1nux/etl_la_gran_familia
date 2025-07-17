@@ -11,7 +11,14 @@ SELECT
     ISNULL((SELECT SUM(cs.Monto * cs.Cantidad) FROM Costo cs WHERE cs.ProyectoID = p.ProyectoID AND cs.Fecha <= v.Fecha), 0) AS montocosto,
     -- Ganancia: monto de la venta menos el costo
     v.MontoTotal - ISNULL((SELECT SUM(cs.Monto * cs.Cantidad) FROM Costo cs WHERE cs.ProyectoID = p.ProyectoID AND cs.Fecha <= v.Fecha), 0) AS montoganancia,
-    p.Presupuesto AS presupuesto
+    p.Presupuesto AS presupuesto,
+    -- Agregar campos necesarios para el mapeo de IDs
+    c.Nombre AS nombrecliente,
+    c.Apellido AS apellidocliente,
+    e.Nombre AS nombreempleado,
+    e.Apellido AS apellidoempleado,
+    p.Nombre AS nombreproyecto,
+    i.Direccion AS direccion
 FROM Venta v
 INNER JOIN Cliente c ON v.ClienteID = c.ClienteID
 INNER JOIN Empleado e ON v.EmpleadoID = e.EmpleadoID
@@ -19,6 +26,4 @@ INNER JOIN Inmueble i ON v.InmuebleID = i.InmuebleID
 INNER JOIN Proyecto p ON i.ProyectoID = p.ProyectoID
 WHERE v.Fecha IS NOT NULL
   AND v.FormaPago IS NOT NULL
-GROUP BY
-    v.Fecha, v.FormaPago, e.EmpleadoID, p.ProyectoID, i.InmuebleID, c.ClienteID, v.MontoTotal, p.Presupuesto
-;
+ORDER BY v.Fecha, v.VentaID;
